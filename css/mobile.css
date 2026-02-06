@@ -9,7 +9,6 @@ meta{
 }
 
 body{
-
     background-attachment: fixed;
     overflow: hidden;
     padding-top: env(safe-area-inset-top); /* Ajuste para o topo */
@@ -20,8 +19,8 @@ body{
 
 
 section#iniciarSessao {
-    height: 65%;
-    width: 76%;
+    height: auto;
+    width: 79%;
     display: flex;
     /* justify-content: flex-start; */
     flex-direction: column;

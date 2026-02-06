@@ -25,10 +25,13 @@ nav#barranav{
     display: flex;
     position: sticky;
     top: 0;
-    padding-top: 10px;
+    padding: 10px 0px;
     margin-top: 10px;
     background: rgba(255, 255, 255, 0.429);
     border-radius: 20px 20px 0 0;
+    justify-content: space-evenly;
+    align-items: stretch;
+    flex-direction: row;
 }
 
 
@@ -71,6 +74,10 @@ div.icones ul#menudousuario {
 
 .menu-oculto li:hover {
     background: #f0f0f0;
+}
+
+span#username-display{
+    display: none;
 }
 
 img#imageminicio{

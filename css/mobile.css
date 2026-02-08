@@ -10,7 +10,7 @@ meta{
 
 body{
     background-attachment: fixed;
-    overflow: hidden;
+    /*overflow: hidden;*/
     padding-top: env(safe-area-inset-top); /* Ajuste para o topo */
     padding-bottom: env(safe-area-inset-bottom); /* Ajuste para o fundo */
     padding-left: env(safe-area-inset-left); /* Ajuste para a esquerda */

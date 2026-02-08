@@ -171,6 +171,11 @@ button.btn:hover{
     font-weight: bold;
 }
 
+button.btn:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 p.txtfim{
     text-align: center;
     margin-top: 20px;
@@ -215,7 +220,7 @@ div#modal{
 
 div.modal{
     position: fixed;
-    z-index: 9999;
+    z-index: 99999999999;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

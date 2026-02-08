@@ -1,3 +1,4 @@
+let limpandoSistema = false;
 document.addEventListener('DOMContentLoaded', function () {
     // Mostrar/Ocultar Senha
     const mostrarsenha = document.querySelectorAll('span.olho')
@@ -16,14 +17,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Exibir/Ocultar Mensagem de Erro
     function exibirErro(input, msgErro, mensagem = '') {
+        console.log(limpandoSistema)
+        if(limpandoSistema) return console.log(limpandoSistema);
+
         if (mensagem) {
             msgErro.textContent = mensagem
             msgErro.style.display = 'block'
             input.style.backgroundColor = 'rgba(255, 0, 0, 0.347)'
+
+            input.classList.add('input-erro')
+            bloquearOutrosInputs(input)
         } else {
             msgErro.style.display = 'none'
             input.style.backgroundColor = ''
+
+            input.classList.remove('input-erro')
+            
+            desbloquearInputs()
+
         }
+
+        atualizarEstadoBotao()
+    }
+
+    function limparCampos() {
+        /*document.getElementById('novousuario').value = ''
+        document.querySelectorAll('.email').forEach(input => input.value = '')
+        document.querySelectorAll('.senhas').forEach(input => input.value = '')*/
+
+        const inputs = document.querySelectorAll('input')
+        inputs.forEach(input =>{
+            input.value = ''
+            input.style.backgroundColor = ''
+            input.classList.remove('input-erro')
+            input.disabled = false
+        })
+
+        const msgErro = document.querySelectorAll('.erromensagem, [id*="Erro"]')
+        msgErro.forEach(msg => {
+            msg.textContent = ''
+            msg.style.display = 'none'
+        })
+
+        atualizarEstadoBotao()
     }
 
     // Validação Genérica
@@ -44,7 +80,9 @@ document.addEventListener('DOMContentLoaded', function () {
     //__________________________________ Usuário __________________________________
     const usuario = document.getElementById('novousuario')
     const msgErroUsu = document.getElementById('msgnovousuarioErro')
-    usuario.addEventListener('blur', () => validarCampo(usuario, msgErroUsu))
+    usuario.addEventListener('blur', () => {
+        validarCampo(usuario, msgErroUsu);
+    })
 
     //__________________________________ Email _______________________________
     const email = document.querySelectorAll('input.email')
@@ -54,9 +92,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const msgErro = mensagem[index]
         const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
 
-        input.addEventListener('blur', () => 
-            validarCampo(input, msgErro, regexEmail, '*E-mail inválido!')
-        )
+        input.addEventListener('blur', () => {
+            validarCampo(input, msgErro, regexEmail, '*E-mail inválido!');
+        });
 
         input.addEventListener('input', () => {
             input.value === '' && exibirErro(input, msgErro)
@@ -74,13 +112,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const eRegistro = input.classList.contains('registrar')
 
             if (!valor) {
-                exibirErro(input, msgErro, '*A senha não pode estar vazia!')
+                exibirErro(input, msgErro, '*A senha não pode estar vazia!');
             } else if (eRegistro && !/^(?=.*[A-Z])(?=.*\d).{8,}$/.test(valor)) {
                 exibirErro(input, msgErro, '*A senha deve ter 8 caracteres, uma maiúscula e um número!')
             } else if (valor.length < 8) {
                 exibirErro(input, msgErro, '*A senha deve ter pelo menos 8 caracteres!')
             } else {
                 exibirErro(input, msgErro)
+
             }
         })
 
@@ -94,15 +133,44 @@ document.addEventListener('DOMContentLoaded', function () {
     const login = document.querySelector('.loginLink')
     const cadastro = document.querySelector('#iniciarSessao')
 
+    registrar.addEventListener('mousedown', function(e){
+        limpandoSistema = true
+    })
     registrar.addEventListener('click', function(e) {
         e.preventDefault()
+        const todosInputs = document.querySelectorAll('input')
+        todosInputs.forEach(input => {
+            input.value = ''
+            input.style.backgroundColor = ''
+            input.classList.remove('input-erro')
+            input.disabled = false
+        })
+        limparCampos()
         cadastro.classList.add('modoRegistro')
+
+        setTimeout(() => { limpandoSistema = false }, 100) // Pequeno delay para evitar conflitos de validação
+        
     });
 
+    login.addEventListener('mousedown', function(e){
+        limpandoSistema = true
+    })
     login.addEventListener('click', function(e) {
         e.preventDefault()
+        const todosInputs = document.querySelectorAll('input')
+        todosInputs.forEach(input => {
+            input.value = ''
+            input.style.backgroundColor = ''
+            input.classList.remove('input-erro')
+            input.disabled = false
+        })
+        limparCampos()
         cadastro.classList.remove('modoRegistro')
+
+        setTimeout(() => { limpandoSistema = false }, 100) // Pequeno delay para evitar conflitos de validação
+        
     })
+
 })
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -128,8 +196,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Função para verificar se todos os campos estão preenchidos e válidos
     function verificarCampos() {
         const usuario = document.getElementById('novousuario').value.trim()
-        const email = document.querySelectorAll('.email')[1].value.trim()
-        const senha = document.querySelectorAll('.senhas')[1].value.trim()
+        const email = document.getElementById('novoemail').value.trim()
+        const senha = document.getElementById('novasenha').value.trim()
 
         // Verifica se os campos estão preenchidos
         if (!usuario || !email || !senha) {
@@ -157,17 +225,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return true
     }
 
-    // Função para limpar os campos do formulário
     function limparCampos() {
         document.getElementById('novousuario').value = ''
-        document.querySelectorAll('.email')[1].value = ''
-        document.querySelectorAll('.senhas')[1].value = ''
+        document.getElementById('novoemail').value = ''
+        document.getElementById('novasenha').value = ''
     }
 
     function salvarUsuario(){
-         const usuario = document.getElementById('novousuario').value
-            const email = document.querySelectorAll('.email')[1].value
-            const senha = document.querySelectorAll('.senhas')[1].value
+            const usuario = document.getElementById('novousuario').value
+            const email = document.getElementById('novoemail').value
+            const senha = document.getElementById('novasenha').value
 
             const dadosUsuario = {
                 usuario: usuario,
@@ -198,6 +265,65 @@ document.addEventListener('DOMContentLoaded', function () {
     })
 });
 
+function bloquearOutrosInputs(inputcomErro){
+    inputcomErro.classList.add('input-erro')
+    inputcomErro.focus()
+}
+
+function desbloquearInputs(){
+    const todosInputs = document.querySelectorAll('input')
+
+    todosInputs.forEach(input => {
+        input.disabled = false
+        input.classList.remove('input-erro')
+        input.style.backgroundColor = ''
+    })
+}
+
+function atualizarEstadoBotao(){
+    const btnRegistrar = document.querySelector('.btnRegistro')
+    const btnLogin = document.querySelector('.Entrar')
+
+    // Se existir QUALQUER erro → desabilita
+    if (btnRegistrar) {
+        btnRegistrar.disabled = !dadosValidosRegistro() 
+    }
+
+    if (btnLogin) {
+        btnLogin.disabled = !dadosValidosLogin() 
+    }
+}
+
+function dadosValidosRegistro(){
+    const usuario = document.getElementById('novousuario').value.trim()
+    const email = document.getElementById('novoemail').value.trim()
+    const senha = document.getElementById('novasenha').value.trim()
+
+    const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    const regexSenha = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    return(
+        usuario.length > 0 &&
+        regexEmail.test(email) &&
+        regexSenha.test(senha)
+    )
+}
+
+function dadosValidosLogin(){
+    const usuarioLogin = document.getElementById('usuario').value.trim()
+    const senhaLogin = document.getElementById('senha').value.trim()
+    
+    const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    const regexSenha = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+    
+    return(
+        regexEmail.test(usuarioLogin) &&
+        regexSenha.test(senhaLogin)
+    )
+}
+
+
+
 document.addEventListener('DOMContentLoaded', function () {
 
     // Função para verificar o login
@@ -207,7 +333,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Verificar se o campo de usuário e senha não estão vazios
         if (!usuarioLogin || !senhaLogin) {
-            /* alert('Por favor, preencha todos os campos.') */
             erroModal('Por favor, preencha todos os campos')
             
             return false
